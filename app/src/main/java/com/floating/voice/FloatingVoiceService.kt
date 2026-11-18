@@ -90,7 +90,7 @@ class FloatingVoiceService : AccessibilityService() {
             val existingText = it.text?.toString() ?: ""
             val updatedText = if (existingText.isEmpty()) newText else "$existingText $newText"
             val arguments = Bundle().apply {
-                putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHAR_SEQUENCE, updatedText)
+                putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, updatedText)
             }
             it.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
         }
