@@ -17,14 +17,22 @@ import android.widget.ImageButton
 import android.widget.Toast
 
 class FloatingVoiceService : AccessibilityService() {
-    private lateinit var windowManager: WindowManager
-    private lateinit var floatingView: View
-    private lateinit var speechRecognizer: SpeechRecognizer
+    private var windowManager: WindowManager? = null
+    private var floatingView: View? = null
+    private var speechRecognizer: SpeechRecognizer? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        createFloatingWidget()
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+        try {
+            createFloatingWidget()
+            if (SpeechRecognizer.isRecognitionAvailable(this)) {
+                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+            } else {
+                Toast.makeText(this, "Speech Recognition available নয়", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun createFloatingWidget() {
@@ -34,7 +42,7 @@ class FloatingVoiceService : AccessibilityService() {
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         ).apply {
@@ -43,44 +51,48 @@ class FloatingVoiceService : AccessibilityService() {
             y = 300
         }
 
-        windowManager.addView(floatingView, params)
+        windowManager?.addView(floatingView, params)
 
-        val micButton = floatingView.findViewById<ImageButton>(R.id.btnFloatingMic)
-        micButton.setOnClickListener {
+        val micButton = floatingView?.findViewById<ImageButton>(R.id.btnFloatingMic)
+        micButton?.setOnClickListener {
             startVoiceListening()
         }
     }
 
     private fun startVoiceListening() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "bn-BD")
-        }
-
-        speechRecognizer.setRecognitionListener(object : RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {
-                Toast.makeText(this@FloatingVoiceService, "শুনছি... কথা বলুন", Toast.LENGTH_SHORT).show()
-            }
-            override fun onBeginningOfSpeech() {}
-            override fun onRmsChanged(rmsdB: Float) {}
-            override fun onBufferReceived(buffer: ByteArray?) {}
-            override fun onEndOfSpeech() {}
-            override fun onError(error: Int) {
-                Toast.makeText(this@FloatingVoiceService, "আবার চেষ্টা করুন", Toast.LENGTH_SHORT).show()
+        try {
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE, "bn-BD")
             }
 
-            override fun onResults(results: Bundle?) {
-                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (!matches.isNullOrEmpty()) {
-                    val spokenText = matches[0]
-                    injectTextIntoFocusedField(spokenText)
+            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) {
+                    Toast.makeText(this@FloatingVoiceService, "শুনছি... কথা বলুন", Toast.LENGTH_SHORT).show()
                 }
-            }
-            override fun onPartialResults(partialResults: Bundle?) {}
-            override fun onEvent(eventType: Int, params: Bundle?) {}
-        })
+                override fun onBeginningOfSpeech() {}
+                override fun onRmsChanged(rmsdB: Float) {}
+                override fun onBufferReceived(buffer: ByteArray?) {}
+                override fun onEndOfSpeech() {}
+                override fun onError(error: Int) {
+                    Toast.makeText(this@FloatingVoiceService, "আবার চেষ্টা করুন (Code: $error)", Toast.LENGTH_SHORT).show()
+                }
 
-        speechRecognizer.startListening(intent)
+                override fun onResults(results: Bundle?) {
+                    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    if (!matches.isNullOrEmpty()) {
+                        val spokenText = matches[0]
+                        injectTextIntoFocusedField(spokenText)
+                    }
+                }
+                override fun onPartialResults(partialResults: Bundle?) {}
+                override fun onEvent(eventType: Int, params: Bundle?) {}
+            })
+
+            speechRecognizer?.startListening(intent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Mic Error: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun injectTextIntoFocusedField(newText: String) {
@@ -111,11 +123,9 @@ class FloatingVoiceService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::floatingView.isInitialized) {
-            windowManager.removeView(floatingView)
-        }
-        if (::speechRecognizer.isInitialized) {
-            speechRecognizer.destroy()
-        }
+        try {
+            floatingView?.let { windowManager?.removeView(it) }
+            speechRecognizer?.destroy()
+        } catch (e: Exception) {}
     }
 }
