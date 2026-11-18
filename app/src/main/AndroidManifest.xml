@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <queries>
         <intent>
@@ -14,7 +15,7 @@
     <application
         android:allowBackup="true"
         android:icon="@android:drawable/ic_btn_speak_now"
-        android:label="Floating Voice"
+        android:label="Floating Voice AI"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
 

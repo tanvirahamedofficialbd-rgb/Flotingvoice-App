@@ -1,52 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:background="#F5F7FA">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Floating Voice Pro"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
-
-    <TextView
-        android:id="@+id/tvLangStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Language: Bangla (bn-BD)"
-        android:textSize="15sp"
-        android:layout_marginBottom="24dp" />
-
-    <Button
-        android:id="@+id/btnMicPerm"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="1. Allow Microphone Permission"
-        android:layout_marginBottom="12dp" />
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/btnOverlayPerm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="2. Allow Display Over Other Apps"
-        android:layout_marginBottom="12dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Floating Voice AI Pro"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:layout_marginBottom="4dp" />
 
-    <Button
-        android:id="@+id/btnAccessibility"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="3. Turn On Accessibility Service"
-        android:layout_marginBottom="24dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hold mic to speak, release to auto-type (Bangla + English)"
+            android:textSize="13sp"
+            android:textColor="#546E7A"
+            android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/btnToggleLang"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Switch Language (Bangla / English)" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:elevation="2dp"
+            android:layout_marginBottom="16dp">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Setup &amp; Permissions"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#263238"
+                android:layout_marginBottom="10dp" />
+
+            <TextView
+                android:id="@+id/tvStatusSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Checking permissions..."
+                android:textSize="13sp"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/btnMicPerm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Allow Microphone"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnOverlayPerm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. Allow Floating Overlay"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnAccessibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3. Enable Accessibility Service" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:elevation="2dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI Mixed Language Engine (Gemini)"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#263238"
+                android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/etApiKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Paste Gemini API Key here"
+                android:inputType="textPassword"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnSaveKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save API Key" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="16dp"
+            android:elevation="2dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent Transcriptions (Tap to Copy)"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#263238"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/historyContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/btnClearHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear History"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnPrivacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Privacy Policy &amp; Data Safety Info" />
+
+    </LinearLayout>
+</ScrollView>
